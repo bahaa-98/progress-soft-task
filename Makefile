@@ -1,4 +1,4 @@
-# Makefile for the Data Warehouse project
+# Makefile
 
 # Variables
 JAVA_FILES := $(shell find src -name '*.java')

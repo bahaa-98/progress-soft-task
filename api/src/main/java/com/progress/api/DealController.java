@@ -2,7 +2,9 @@ package com.progress.api;
 
 import com.progress.dto.request.CreateDealRequest;
 import com.progress.dto.request.UpdateDealRequest;
+import com.progress.dto.response.CODE;
 import com.progress.dto.response.DealResponse;
+import com.progress.dto.response.Response;
 import com.progress.service.services.DealService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,40 +25,74 @@ public class DealController {
     }
 
     @PostMapping
-    public ResponseEntity<DealResponse> createDeal(@RequestBody CreateDealRequest request) {
+    public ResponseEntity<Response<DealResponse>> createDeal(@RequestBody CreateDealRequest request) {
         log.info("Create Deal Api With Request : {}", request.toString());
 
-        return new ResponseEntity<>(dealService.createDeal(request), HttpStatus.CREATED);
+        Response<DealResponse> response = Response.<DealResponse>builder()
+                .data(dealService.createDeal(request))
+                .code(CODE.CREATED.getId())
+                .message(CODE.CREATED.name())
+                .success(true)
+                .build();
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<DealResponse>> retrieveAllDeals() {
+    public ResponseEntity<Response<List<DealResponse>>> retrieveAllDeals() {
         log.info("Retrieving All Deals Api");
 
-        return new ResponseEntity<>(dealService.retrieveAllDeals(), HttpStatus.OK);
+        Response<List<DealResponse>> response = Response.<List<DealResponse>>builder()
+                .data(dealService.retrieveAllDeals())
+                .code(CODE.OK.getId())
+                .message(CODE.OK.name())
+                .success(true)
+                .build();
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DealResponse> retrieveDealById(@PathVariable Long id) {
+    public ResponseEntity<Response<DealResponse>> retrieveDealById(@PathVariable Long id) {
         log.info("Retrieve Deal Api With ID : {}", id);
 
-        return new ResponseEntity<>(dealService.retrieveDealById(id), HttpStatus.OK);
+        Response<DealResponse> response = Response.<DealResponse>builder()
+                .data(dealService.retrieveDealById(id))
+                .code(CODE.OK.getId())
+                .message(CODE.OK.name())
+                .success(true)
+                .build();
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DealResponse> updateDeal(@PathVariable Long id,
+    public ResponseEntity<Response<DealResponse>> updateDeal(@PathVariable Long id,
                                                    @RequestBody UpdateDealRequest request) {
         log.info("Update Deal Api With Request : {}", request.toString());
 
-        return new ResponseEntity<>(dealService.updateDeal(id, request), HttpStatus.OK);
+        Response<DealResponse> response = Response.<DealResponse>builder()
+                .data(dealService.updateDeal(id, request))
+                .code(CODE.OK.getId())
+                .message(CODE.OK.name())
+                .success(true)
+                .build();
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> softDeleteDeal(@PathVariable Long id) {
+    public ResponseEntity<Response<Void>> softDeleteDeal(@PathVariable Long id) {
         log.info("Soft Delete Deal Api With ID : {}", id);
 
         dealService.softDeleteDeal(id);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        Response<Void> response = Response.<Void>builder()
+                .code(CODE.OK.getId())
+                .message(CODE.OK.name())
+                .success(true)
+                .build();
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
