@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  data-warehouse:
+    container_name: datawarehouse
+    image: postgres
+    ports:
+      - 5554:5432
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root1234
+      POSTGRES_DB: datawarehouse
+
+volumes:
+  data-warehouse:
+    driver: local
